@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year 2026 from Tang</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --night-sky-blue: #0A0A2A;
+            --star-color: #FFFFFF;
+            --envelope-color: #F0F0F0;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-text: #333333;
+            --firework-spark: #FFD700;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* Hide scrollbars */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Kanit', sans-serif;
+            background-color: var(--night-sky-blue);
+            position: relative;
+            cursor: pointer; /* Default cursor for general clicks */
+            user-select: none; /* Prevent text selection */
+        }
+
+        /* Stars background effect */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: var(--star-color);
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle linear infinite;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        /* Envelope */
+        .envelope-container {
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            text-align: center;
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .envelope-container.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .envelope {
+            width: 250px;
+            height: 150px;
+            background-color: var(--envelope-color);
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .envelope:hover {
+            transform: translateY(-10px);
+        }
+
+        .envelope::before { /* Top flap */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 125px solid transparent;
+            border-right: 125px solid transparent;
+            border-bottom: 75px solid #E0E0E0;
+            border-radius: 8px 8px 0 0;
+            z-index: 1;
+        }
+
+        .envelope::after { /* Bottom flap */
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 125px solid #F8F8F8;
+            border-right: 125px solid #F8F8F8;
+            border-top: 75px solid transparent;
+            border-radius: 0 0 8px 8px;
+            z-index: 1;
+        }
+        
+        .envelope-front { /* Front part */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--envelope-color);
+            border-radius: 8px;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2em;
+            color: #555;
+            letter-spacing: 1px;
+            box-sizing: border-box;
+            padding-top: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            font-weight: 700;
+        }
+
+        /* Message Card */
+        .message-card {
+            position: absolute;
+            z-index: 3;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            padding: 40px;
+            max-width: 600px;
+            text-align: center;
+            color: var(--card-text);
+            opacity: 0;
+            transform: scale(0.7);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            pointer-events: none; /* Make it unclickable when hidden */
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-sizing: border-box;
+            max-height: 80vh;
+            overflow-y: auto; /* Allow scrolling for long text */
+        }
+        .message-card.visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all; /* Make it clickable when visible */
+        }
+
+        .message-card h2 {
+            font-size: 2.2em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #4A90E2;
+        }
+
+        .message-card p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .fireworks-button {
+            background-color: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .fireworks-button:hover {
+            background-color: #E24C4C;
+            transform: translateY(-3px);
+        }
+
+        /* Fireworks display */
+        .fireworks-display {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Clicks go through */
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .fireworks-display.active {
+            opacity: 1;
+            pointer-events: all; /* Clicks activate fireworks */
+        }
+
+        /* Individual Firework */
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--firework-spark);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--firework-spark), 0 0 20px var(--firework-spark);
+            animation: fadeOut 1.5s forwards;
+            pointer-events: none;
+        }
+
+        .firework-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, var(--firework-spark) 20%, transparent 80%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: spark 1s ease-out forwards;
+        }
+
+        @keyframes spark {
+            0% { transform: scale(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: scale(1) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 768px) {
+            .envelope {
+                width: 200px;
+                height: 120px;
+            }
+            .envelope::before { border-left: 100px solid transparent; border-right: 100px solid transparent; border-bottom: 60px solid #E0E0E0; }
+            .envelope::after { border-left: 100px solid #F8F8F8; border-right: 100px solid #F8F8F8; border-top: 60px solid transparent; }
+            .envelope-front { padding-top: 15px; font-size: 1em; }
+            .message-card {
+                padding: 30px;
+                max-width: 90vw;
+            }
+            .message-card h2 { font-size: 1.8em; }
+            .message-card p { font-size: 0.95em; }
+            .fireworks-button {
+                padding: 12px 25px;
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <div class="envelope-container" id="envelopeContainer">
+        <div class="envelope">
+            <div class="envelope-front">คลิกเปิดจดหมาย!</div>
+        </div>
+    </div>
+
+    <div class="message-card" id="messageCard">
+        <h2>Tang to everyone</h2>
+        <p>Happy new year 2026 นะ ขอให้ปีนี้ตลอดทั้งปีของทุกคนเป็นปีที่ดี สมหวังทุกสิ่งดั่งใจหวัง อยากมีแฟนก็ขอให้มี อยากมีเงินก็ขอให้เงินเข้ามาเรื่อย ๆ ไม่ขาดมือ ขออะไรขอให้ได้อย่างนั้น มีแต่อะไรดี ๆ เข้ามา เป้าหมายสำเร็จทุกเป้าหมายที่อยากทำ ใครสอบเข้าก็ขอให้สอบติด ใครสอบเข้ามหาลัยก็ขอให้ติดคณะที่ใช่ มหาวิทยาลัยที่ชอบ ตลอดทั้งปีนี้ขอให้ไม่เหนื่อยกาย ไม่เหนื่อยใจ ใครมีแฟนก็ขอให้รักกับแฟนนาน ๆ</p>
+        <button class="fireworks-button" id="startFireworksButton">จุดพลุพิเศษ!</button>
+    </div>
+
+    <div class="fireworks-display" id="fireworksDisplay"></div>
+
+    <script>
+        const starsContainer = document.querySelector('.stars');
+        const envelopeContainer = document.getElementById('envelopeContainer');
+        const messageCard = document.getElementById('messageCard');
+        const startFireworksButton = document.getElementById('startFireworksButton');
+        const fireworksDisplay = document.getElementById('fireworksDisplay');
+        let fireworksMode = false;
+
+        // --- Star Generation ---
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = `${Math.random() * 100}vw`;
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.width = `${Math.random() * 2 + 1}px`;
+            star.style.height = star.style.width;
+            star.style.animationDelay = `${Math.random() * 5}s`;
+            star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            starsContainer.appendChild(star);
+        }
+        for (let i = 0; i < 150; i++) { // Generate 150 stars
+            createStar();
+        }
+
+        // --- Envelope / Message Card Logic ---
+        envelopeContainer.addEventListener('click', () => {
+            envelopeContainer.classList.add('hidden');
+            messageCard.classList.add('visible');
+            // Play a random firework animation in background when card opens
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    createFirework(Math.random() * window.innerWidth, Math.random() * window.innerHeight * 0.7, 'normal');
+                }, i * 300);
+            }
+        });
+
+        startFireworksButton.addEventListener('click', () => {
+            messageCard.classList.remove('visible');
+            fireworksDisplay.classList.add('active');
+            fireworksMode = true;
+            document.body.style.cursor = 'crosshair'; // Change cursor for firework mode
+        });
+
+        // --- Fireworks Logic ---
+        function createFirework(x, y, type = 'normal') {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
+            fireworksDisplay.appendChild(firework);
+
+            const numParticles = type === 'normal' ? 20 : 40;
+            const colors = ['#FFD700', '#FF4500', '#DA70D6', '#00BFFF', '#ADFF2F']; // More colors
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                
+                // Random color for each particle
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.background = `radial-gradient(circle, ${randomColor} 20%, transparent 80%)`;
+
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 80 + 30; // Random spread distance
+                
+                particle.style.left = `${Math.cos(angle) * distance}px`;
+                particle.style.top = `${Math.sin(angle) * distance}px`;
+                firework.appendChild(particle);
+
+                // Different animation for different types
+                if (type === 'star') {
+                    particle.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+                    particle.style.width = '12px';
+                    particle.style.height = '12px';
+                } else if (type === 'heart') {
+                    particle.style.clipPath = 'path("M100,20 C150,0 200,60 100,120 C0,60 50,0 100,20Z")';
+                    particle.style.transform = `scale(0.1) rotate(${Math.random() * 360}deg)`;
+                    particle.style.width = '20px';
+                    particle.style.height = '20px';
+                } else if (type === '2026') {
+                    // This is more complex, just make it spread outwards for simplicity
+                    // Or you can use SVG path for numbers if time permits, but for 2 hours, this is faster.
+                    particle.style.transform = `scale(0.1) rotate(${Math.random() * 360}deg)`;
+                    particle.style.width = '15px';
+                    particle.style.height = '15px';
+                    // You would ideally use SVG path or images for numbers
+                }
+            }
+
+            // Remove firework after animation
+            firework.addEventListener('animationend', () => {
+                firework.remove();
+            });
+        }
+
+        fireworksDisplay.addEventListener('click', (e) => {
+            if (fireworksMode) {
+                const randomType = Math.random();
+                let type = 'normal';
+                if (randomType < 0.25) type = 'star';
+                else if (randomType < 0.5) type = 'heart';
+                else if (randomType < 0.75) type = '2026'; // Representing the number shape
+                // Default to normal for the rest
+
+                createFirework(e.clientX, e.clientY, type);
+            }
+        });
+
+        // Optional: Reset if user clicks "back" or refreshes
+        window.addEventListener('load', () => {
+            envelopeContainer.classList.remove('hidden');
+            messageCard.classList.remove('visible');
+            fireworksDisplay.classList.remove('active');
+            fireworksMode = false;
+            document.body.style.cursor = 'pointer';
+        });
+    </script>
+</body>
+</html>
+
+          
